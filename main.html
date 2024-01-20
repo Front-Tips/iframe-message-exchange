@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Main Page</title>
+  </head>
+  <body>
+    <iframe src="iframe.html" width="480" height="320"></iframe>
+    <script>
+      // Create MessageChannel for main window and iframe
+      const channel = new MessageChannel();
+
+      // Select iframe element
+      const iframe = document.querySelector("iframe");
+
+      // Event listener for iframe load
+      iframe.addEventListener("load", onLoad);
+
+      function onLoad() {
+        // Send message to iframe with port2
+        iframe.contentWindow.postMessage("From the Main", "*", [
+          channel.port2,
+        ]);
+
+        // Set up message listener on port1 to
+        // receive messages from the iframe
+        channel.port1.onmessage = onMessage;
+      }
+
+      function onMessage(e) {
+        // Log data received from iframe
+        console.log(e.data);
+      }
+    </script>
+  </body>
+</html>
